@@ -11,7 +11,7 @@ variable "remote_host" {
   type        = string
   description = "The IP or FQDN of your XCP-ng. It must be the master"
   sensitive   = true
-  default     = "node_ip"
+  default     = "10.35.1.6"
 }
 
 variable "remote_username" {
@@ -25,7 +25,7 @@ variable "remote_password" {
   type        = string
   description = "The password used to interact with your XCP-ng"
   sensitive   = true
-  default     = "node_passwd"
+  default     = "Clave_del_Nodo"
 }
 
 variable "sr_iso_name" {
@@ -42,7 +42,7 @@ variable "sr_name" {
 
 source "xenserver-iso" "windows2022" {
   iso_checksum                 = "7a7d4c64536f0e705ca05657a31b2efcbed7aafe981ee24af4b12dc5ab7132299f20fda3c141b6eebe0e45aae77b8a8a5052afbdc6fed700bdd1efaf8f3176e2"
-  iso_url                      = "http://nexus.example.com/repository/ISOS/WindowsServer2022EN.iso"
+  iso_url                      = "http://10.35.10.130:8081/repository/ISOS/WindowsServer2022EN.iso"
   sr_iso_name                  = var.sr_iso_name
   sr_name                      = var.sr_name
   remote_host                  = var.remote_host
@@ -68,7 +68,7 @@ source "xenserver-iso" "windows2022" {
     "./floppy/en22/cloudbase-init-unattend.conf",
     "./floppy/en22/cloudbase-init.conf",
     "./floppy/en22/Unattend.xml",
-    "./floppy/en22/2k22unattend.xml",
+    "./floppy/en22/winunattend.xml",
     "./scripts/Cleanup.ps1",
     "./scripts/ConfigureRemotingForAnsible.ps1",
     "./scripts/CopyFiles.ps1",
@@ -90,6 +90,7 @@ source "xenserver-iso" "windows2022" {
   output_directory       = "packer-Win2022EN"
   keep_vm                = "never"
   format                 = "vdi_vhd"
+  shutdown_command       = "shutdown /s /t 5 /f /d p:4:1 /c \\\"Packer Shutdown\\\""
 }
 
 build {
@@ -118,16 +119,7 @@ build {
     scripts = ["scripts/Cleanup.ps1"]
   }
 
-  provisioner "windows-restart" {
-    restart_timeout = "30m"
-  }
-
   provisioner "powershell" {
     scripts = ["scripts/Sysprep.ps1"]
   }
-
-  provisioner "windows-restart" {
-    restart_timeout = "30m"
-  }
-
 }

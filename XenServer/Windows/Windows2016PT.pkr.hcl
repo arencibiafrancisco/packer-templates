@@ -40,9 +40,9 @@ variable "sr_name" {
   default     = "PROD171_NFS171COREC14_ST19"
 }
 
-source "xenserver-iso" "windows2022" {
-  iso_checksum                 = "ab3fd810afdca0789361fcedcc9f8fb8df10129581063a1b13c0fc70588cfc93f8fff469f47079d33586e0a6c928e238359d63ff38a2961e2db083ec01984c68"
-  iso_url                      = "http://10.35.10.130:8081/repository/ISOS/WindowsServer2022PT.iso"
+source "xenserver-iso" "windows2016" {
+  iso_checksum                 = "306a0830fab51063e44adf3788bba52f4a87b655ada09d8ef6a1319d832860b55d5b61d07e19bb8acb44edeb4591e95cb0e0f7fbe7db03cae7c9a63f270f58cf"
+  iso_url                      = "http://10.35.10.130:8081/repository/ISOS/WindowsServer2016PT.iso"
   sr_iso_name                  = var.sr_iso_name
   sr_name                      = var.sr_name
   remote_host                  = var.remote_host
@@ -55,24 +55,24 @@ source "xenserver-iso" "windows2022" {
     "<wait><wait><wait><enter>"
   ]
 
-  vm_name         = "Win2022PT_template"
-  vm_description  = "VM for Windows Server 2022 PT"
+  vm_name         = "Win2016PT_template"
+  vm_description  = "VM for Windows Server 2016 PT"
   vcpus_max       = 4
   vcpus_atstartup = 4
   vm_memory       = 16384 # MB
   network_names   = ["MAD4-CORE-ADM-MGMT-VLAN60"]
   disk_size       = 81920 # MB
-  disk_name       = "Win2022PT_template_disk"
+  disk_name       = "Win2016PT_template_disk"
   floppy_files = [
-    "./floppy/pt22/autounattend.xml",
-    "./floppy/pt22/cloudbase-init-unattend.conf",
-    "./floppy/pt22/cloudbase-init.conf",
-    "./floppy/pt22/Unattend.xml",
-    "./floppy/pt22/winunattend.xml",
+    "./floppy/pt16/autounattend.xml",
+    "./floppy/pt16/cloudbase-init-unattend.conf",
+    "./floppy/pt16/cloudbase-init.conf",
+    "./floppy/pt16/Unattend.xml",
+    "./floppy/pt16/winunattend.xml",
     "./scripts/Cleanup.ps1",
     "./scripts/ConfigureRemotingForAnsible.ps1",
     "./scripts/CopyFiles.ps1",
-    "./scripts/WinUpdate.ps1",
+    "./scripts/WinUpdate2016.ps1",
     "./scripts/InstallInitialSetup.ps1",
     "./scripts/Sysprep.ps1"
   ]
@@ -87,19 +87,21 @@ source "xenserver-iso" "windows2022" {
   ssh_password           = "Password2022!"
   ssh_wait_timeout       = "60000s"
   ssh_handshake_attempts = 10000
-  output_directory       = "packer-Win2022PT"
+  output_directory       = "packer-Win2016PT"
   keep_vm                = "never"
   format                 = "vdi_vhd"
   shutdown_command       = "shutdown /s /t 5 /f /d p:4:1 /c \\\"Packer Shutdown\\\""
 }
 
 build {
-  name    = "Win2022PT-XenServer"
-  sources = ["xenserver-iso.windows2022"]
+  name    = "Win2016PT-XenServer"
+  sources = ["xenserver-iso.windows2016"]
 
   provisioner "powershell" {
-    scripts          = ["scripts/WinUpdate.ps1"]
-    valid_exit_codes = [0, 2300218]
+    scripts           = ["scripts/WinUpdate2016.ps1"]
+    elevated_user     = "Administrador"
+    elevated_password = "Password2022!"
+    valid_exit_codes  = [0, 2300218]
   }
 
   provisioner "windows-restart" {
@@ -108,7 +110,9 @@ build {
   }
 
   provisioner "powershell" {
-    scripts = ["scripts/WinUpdate.ps1"]
+    scripts           = ["scripts/WinUpdate2016.ps1"]
+    elevated_user     = "Administrador"
+    elevated_password = "Password2022!"
   }
 
   provisioner "windows-restart" {
@@ -116,10 +120,15 @@ build {
   }
 
   provisioner "powershell" {
-    scripts = ["scripts/Cleanup.ps1"]
+    scripts           = ["scripts/Cleanup.ps1"]
+    elevated_user     = "Administrador"
+    elevated_password = "Password2022!"
   }
 
   provisioner "powershell" {
-    scripts = ["scripts/Sysprep.ps1"]
+    scripts           = ["scripts/Sysprep.ps1"]
+    elevated_user     = "Administrador"
+    elevated_password = "Password2022!"
+    pause_after       = "60s"
   }
 }

@@ -11,7 +11,7 @@ variable "remote_host" {
   type        = string
   description = "The IP or FQDN of your XCP-ng. It must be the master"
   sensitive   = true
-  default     = "node_ip"
+  default     = "10.35.1.6"
 }
 
 variable "remote_username" {
@@ -25,7 +25,7 @@ variable "remote_password" {
   type        = string
   description = "The password used to interact with your XCP-ng"
   sensitive   = true
-  default     = "node_password"
+  default     = "Clave_del_Nodo"
 }
 
 variable "sr_iso_name" {
@@ -42,7 +42,7 @@ variable "sr_name" {
 
 source "xenserver-iso" "windows2022" {
   iso_checksum                 = "81dc00a3da45217c21054959f766e3ff6958757cd31e784c1727e51a1c257fd6939f5d390ec5d241468ffaf1a9a64ae0e5101fb603b1b96f45a683c5b837e601"
-  iso_url                      = "http://nexus.example.com/repository/ISOS/WindowsServer2022ES.iso"
+  iso_url                      = "http://10.35.10.130:8081/repository/ISOS/WindowsServer2022ES.iso"
   sr_iso_name                  = var.sr_iso_name
   sr_name                      = var.sr_name
   remote_host                  = var.remote_host
@@ -68,7 +68,7 @@ source "xenserver-iso" "windows2022" {
     "./floppy/es22/cloudbase-init-unattend.conf",
     "./floppy/es22/cloudbase-init.conf",
     "./floppy/es22/Unattend.xml",
-    "./floppy/es22/2k22unattend.xml",
+    "./floppy/es22/winunattend.xml",
     "./scripts/Cleanup.ps1",
     "./scripts/ConfigureRemotingForAnsible.ps1",
     "./scripts/CopyFiles.ps1",
@@ -90,6 +90,7 @@ source "xenserver-iso" "windows2022" {
   output_directory       = "packer-Win2022ES"
   keep_vm                = "never"
   format                 = "vdi_vhd"
+  shutdown_command       = "shutdown /s /t 5 /f /d p:4:1 /c \\\"Packer Shutdown\\\""
 }
 
 build {
@@ -118,16 +119,7 @@ build {
     scripts = ["scripts/Cleanup.ps1"]
   }
 
-  provisioner "windows-restart" {
-    restart_timeout = "30m"
-  }
-
   provisioner "powershell" {
     scripts = ["scripts/Sysprep.ps1"]
   }
-
-  provisioner "windows-restart" {
-    restart_timeout = "30m"
-  }
-
 }

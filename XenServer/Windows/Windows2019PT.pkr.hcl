@@ -40,9 +40,9 @@ variable "sr_name" {
   default     = "PROD171_NFS171COREC14_ST19"
 }
 
-source "xenserver-iso" "windows2022" {
-  iso_checksum                 = "ab3fd810afdca0789361fcedcc9f8fb8df10129581063a1b13c0fc70588cfc93f8fff469f47079d33586e0a6c928e238359d63ff38a2961e2db083ec01984c68"
-  iso_url                      = "http://10.35.10.130:8081/repository/ISOS/WindowsServer2022PT.iso"
+source "xenserver-iso" "windows2019" {
+  iso_checksum                 = "40a58c425ad0e5178776f037133f6bde915acb2c795c0a3822d4a8773aab78afe108caf50d9e0d9736596bba676cf67a6a200e810ae55826e1f3489f78e142bf"
+  iso_url                      = "http://10.35.10.130:8081/repository/ISOS/WindowsServer2019PT.iso"
   sr_iso_name                  = var.sr_iso_name
   sr_name                      = var.sr_name
   remote_host                  = var.remote_host
@@ -55,20 +55,20 @@ source "xenserver-iso" "windows2022" {
     "<wait><wait><wait><enter>"
   ]
 
-  vm_name         = "Win2022PT_template"
-  vm_description  = "VM for Windows Server 2022 PT"
+  vm_name         = "Win2019PT_template"
+  vm_description  = "VM for Windows Server 2019 PT"
   vcpus_max       = 4
   vcpus_atstartup = 4
   vm_memory       = 16384 # MB
   network_names   = ["MAD4-CORE-ADM-MGMT-VLAN60"]
   disk_size       = 81920 # MB
-  disk_name       = "Win2022PT_template_disk"
+  disk_name       = "Win2019PT_template_disk"
   floppy_files = [
-    "./floppy/pt22/autounattend.xml",
-    "./floppy/pt22/cloudbase-init-unattend.conf",
-    "./floppy/pt22/cloudbase-init.conf",
-    "./floppy/pt22/Unattend.xml",
-    "./floppy/pt22/winunattend.xml",
+    "./floppy/pt19/autounattend.xml",
+    "./floppy/pt19/cloudbase-init-unattend.conf",
+    "./floppy/pt19/cloudbase-init.conf",
+    "./floppy/pt19/Unattend.xml",
+    "./floppy/pt19/winunattend.xml",
     "./scripts/Cleanup.ps1",
     "./scripts/ConfigureRemotingForAnsible.ps1",
     "./scripts/CopyFiles.ps1",
@@ -87,15 +87,15 @@ source "xenserver-iso" "windows2022" {
   ssh_password           = "Password2022!"
   ssh_wait_timeout       = "60000s"
   ssh_handshake_attempts = 10000
-  output_directory       = "packer-Win2022PT"
+  output_directory       = "packer-Win2019PT"
   keep_vm                = "never"
   format                 = "vdi_vhd"
   shutdown_command       = "shutdown /s /t 5 /f /d p:4:1 /c \\\"Packer Shutdown\\\""
 }
 
 build {
-  name    = "Win2022PT-XenServer"
-  sources = ["xenserver-iso.windows2022"]
+  name    = "Win2019PT-XenServer"
+  sources = ["xenserver-iso.windows2019"]
 
   provisioner "powershell" {
     scripts          = ["scripts/WinUpdate.ps1"]

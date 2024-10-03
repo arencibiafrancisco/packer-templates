@@ -63,7 +63,7 @@
                     <InstallFrom>
                         <MetaData wcm:action="add">
                             <Key>/IMAGE/NAME</Key>
-                            <Value>Windows Server 2022 SERVERSTANDARD</Value>
+                            <Value>Windows Server 2019 SERVERSTANDARD</Value>
                         </MetaData>
                     </InstallFrom>
                     <InstallTo>
@@ -94,7 +94,7 @@
             <OEMInformation>
                 <HelpCustomized>false</HelpCustomized>
             </OEMInformation>
-            <ComputerName>Server22</ComputerName>
+            <ComputerName>Server19</ComputerName>
             <TimeZone>UTC</TimeZone>
             <RegisteredOwner/>
         </component>
@@ -186,7 +186,7 @@
                             <Value>Password2022!</Value>
                             <PlainText>true</PlainText>
                         </Password>
-                        <Group>administrators</Group>
+                        <Group>administradores</Group>
                         <DisplayName>Administrador</DisplayName>
                         <Name>Administrador</Name>
                         <Description>Administrador User</Description>

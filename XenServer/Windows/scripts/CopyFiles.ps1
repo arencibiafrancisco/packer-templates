@@ -15,10 +15,10 @@ Copy-Item -Path $srcDir* -Destination $tempDir -Recurse -Force
 Write-Host 'Archivos copiados temporalmente a C:\apps.'
 
 # Comprobar que el archivo de Sysprep existe antes de copiar a destino final
-$src2k22unattend = Join-Path $tempDir '2k22unattend.xml'
+$src2kunattend = Join-Path $tempDir 'winunattend.xml'
 
-if (-not (Test-Path $src2k22unattend)) {
-    Write-Host '2k22unattend.xml no encontrado en C:\apps'
+if (-not (Test-Path $src2kunattend)) {
+    Write-Host 'winunattend.xml no encontrado en C:\apps'
     exit 1
 }
 
@@ -27,7 +27,7 @@ if (-not (Test-Path $dstSysprepDir)) {
     New-Item -Path $dstSysprepDir -ItemType Directory -Force
 }
 
-# Copiar el archivo 2k22ESunattend.xml desde C:\apps al directorio de destino final
-Copy-Item -Path $src2k22unattend -Destination $dstSysprepDir -Force
+# Copiar el archivo winunattend.xml desde C:\apps al directorio de destino final
+Copy-Item -Path $src2kunattend -Destination $dstSysprepDir -Force
 
-Write-Host 'Archivo 2k22unattend.xml copiado correctamente a su destino final.'
+Write-Host 'Archivo winunattend.xml copiado correctamente a su destino final.'
