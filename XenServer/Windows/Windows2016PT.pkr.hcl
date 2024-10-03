@@ -25,7 +25,7 @@ variable "remote_password" {
   type        = string
   description = "The password used to interact with your XCP-ng"
   sensitive   = true
-  default     = "Clave_del_Nodo"
+  default     = "Node_Password"
 }
 
 variable "sr_iso_name" {
