@@ -20,5 +20,17 @@ powershell -Command "Invoke-WebRequest -Uri 'http://10.35.10.130:8081/repository
 # Disable Citrix VM Tools automatic updates
 cmd.exe /c reg add "HKLM\SOFTWARE\Citrix\XenTools" /v AutoUpdate /t REG_DWORD /d 0 /f
 
-# Restart the system after waiting
+# First reboot
+Restart-Computer -Force
+
+# Wait until the machine reboot
+Write-Host "Waiting for the system to reboot..."
+while (-not (Test-Connection -ComputerName localhost -Count 1 -Quiet)) {
+    Start-Sleep -Seconds 10
+}
+
+# Confirm the machine is back online
+Write-Host "The system is back online."
+
+# Second reboot
 Restart-Computer -Force
