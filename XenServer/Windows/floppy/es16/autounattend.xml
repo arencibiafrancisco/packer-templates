@@ -186,7 +186,7 @@
                             <Value>Password2022!</Value>
                             <PlainText>true</PlainText>
                         </Password>
-                        <Group>administrators</Group>
+                        <Group>administradores</Group>
                         <DisplayName>Administrador</DisplayName>
                         <Name>Administrador</Name>
                         <Description>Administrador User</Description>
